@@ -1,6 +1,9 @@
 fastapi[all]
+uvicorn
 sqlalchemy[asyncio]
 alembic
-python-dotenv
+asyncpg
 psycopg2-binary
-uvicorn
+pydantic-settings
+python-dotenv
+loguru

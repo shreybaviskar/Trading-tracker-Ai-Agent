@@ -1,12 +1,11 @@
-import asyncio
+import os
+from sqlalchemy import create_engine
 from alembic import context
-from sqlalchemy.ext.asyncio import create_async_engine
-from database import DATABASE_URL
 
 target_metadata = None
 
 def run_migrations_offline():
-    url = DATABASE_URL
+    url = os.getenv("DATABASE_URL", "postgresql+asyncpg://user:password@localhost/dbname")
     context.configure(
         url=url,
         target_metadata=target_metadata,
@@ -17,16 +16,13 @@ def run_migrations_offline():
     with context.begin_transaction():
         context.run_migrations()
 
-async def run_migrations_online():
-    connectable = create_async_engine(DATABASE_URL)
+def run_migrations_online():
+    connectable = create_engine(os.getenv("DATABASE_URL", "postgresql+asyncpg://user:password@localhost/dbname"))
+    with connectable.connect() as connection:
+        context.configure(
+            connection=connection,
+            target_metadata=target_metadata,
+        )
 
-    async with connectable.connect() as connection:
-        await connection.run_sync(target_metadata.create_all)
-
-    async with context.begin_transaction():
-        await context.run_migrations()
-
-if context.is_offline_mode():
-    run_migrations_offline()
-else:
-    asyncio.run(run_migrations_online())
+        with context.begin_transaction():
+            context.run_migrations()
