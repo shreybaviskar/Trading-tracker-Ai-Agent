@@ -2,8 +2,8 @@ import os
 from fastapi import FastAPI, Depends
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
-from config import settings
-from database import get_db
+from core.config import settings
+from database.session import get_db
 
 app = FastAPI()
 
