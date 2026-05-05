@@ -1,0 +1,11 @@
+@"
+.env
+.venv/
+__pycache__/
+node_modules/
+.aider*
+logs/
+uploads/
+dist/
+build/
+"@ > .gitignore
